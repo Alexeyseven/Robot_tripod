@@ -1,0 +1,67 @@
+import socket
+from tkinter import *
+import time
+import os
+from PIL import Image, ImageTk
+
+
+s = socket.socket()
+s.bind(('192.168.1.241', 2000))
+s.listen(1)
+os.system('start cmd /k python robot.py')
+conn, addr = s.accept()
+
+
+def send(mes):
+    i = 0
+    delay = 100/velocity.get()/700
+    while i < value.get():
+        conn.send(mes)
+        time.sleep(delay)
+        i += 1
+
+
+def j0_plus():
+    send(b'1')
+
+
+def j0_minus():
+    send(b'2')
+
+
+def j1_plus():
+    send(b'3')
+
+
+def j1_minus():
+    send(b'4')
+
+
+def j2_plus():
+    send(b'5')
+
+
+def j2_minus():
+    send(b'6')
+
+
+root = Tk()
+
+value = IntVar()
+velocity = IntVar()
+
+image_right_open = Image.open('up.png')
+image_right = ImageTk.PhotoImage(image_right_open)
+image_left_open = Image.open('down.png')
+image_left = ImageTk.PhotoImage(image_left_open)
+
+Button(text='J0+', command=j0_plus).place(x=10, y=10)
+Button(text='J0-', command=j0_minus).place(x=70, y=10)
+Button(text='J1+', command=j1_plus).place(x=10, y=40)
+Button(text='J1-', command=j1_minus).place(x=70, y=40)
+Button(text='J2+', command=j2_plus).place(x=10, y=70)
+Button(text='J3-', command=j2_minus).place(x=70, y=70)
+Entry(textvariable=value, width=7).place(x=120, y=10)
+Entry(textvariable=velocity, width=7).place(x=120, y=40)
+
+root.mainloop()
