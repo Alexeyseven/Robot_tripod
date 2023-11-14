@@ -18,7 +18,7 @@ byte ipServ[] = {192, 168, 1, 241}; // IP-адрес сервера
 
 String mes;
 int j = 0;
-int steps = 100;
+int steps = 50;
 
 EthernetClient client; // создаем клиента
 
@@ -40,49 +40,15 @@ void setup() {
     client.stop();
     while (true); // останавливается
   }
+  client.setTimeout(100);
 }
 
 void loop() {
   if (client.available()) {
-    char chr = client.read();
-
-    if (chr == '1') {
-      digitalWrite(PIN_DIR_1, HIGH);
-      digitalWrite(PIN_STEP_1, HIGH);
-      delay(SPEED);
-      digitalWrite(PIN_STEP_1, LOW);
-    }
-    if (chr == '2') {
-      digitalWrite(PIN_DIR_1, LOW);
-      digitalWrite(PIN_STEP_1, HIGH);
-      delay(SPEED);
-      digitalWrite(PIN_STEP_1, LOW);
-    }
-    if (chr == '3') {
-      digitalWrite(PIN_DIR_2, HIGH);
-      digitalWrite(PIN_STEP_2, HIGH);
-      delay(SPEED);
-      digitalWrite(PIN_STEP_2, LOW);
-    }
-    if (chr == '4') {
-      digitalWrite(PIN_DIR_2, LOW);
-      digitalWrite(PIN_STEP_2, HIGH);
-      delay(SPEED);
-      digitalWrite(PIN_STEP_2, LOW);
-    }
-    if (chr == '5') {
-      digitalWrite(PIN_DIR_3, HIGH);
-      digitalWrite(PIN_STEP_3, HIGH);
-      delay(SPEED);
-      digitalWrite(PIN_STEP_3, LOW);
-    }
-    if (chr == '6') {
-      digitalWrite(PIN_DIR_3, LOW);
-      digitalWrite(PIN_STEP_3, HIGH);
-      delay(SPEED);
-      digitalWrite(PIN_STEP_3, LOW);
-    }
-    if (chr == 'u') {
+    String chr = client.readString();
+    
+    if (chr[0] == 'u') {
+      steps = (chr[1] - '0')*100 + (chr[2] - '0')*10 + (chr[3] - '0');
       digitalWrite(PIN_DIR_1, HIGH);
       digitalWrite(PIN_DIR_2, HIGH);
       digitalWrite(PIN_DIR_3, HIGH);
@@ -98,7 +64,8 @@ void loop() {
       }
       client.write('7');
     }
-    if (chr == 'd') {
+    if (chr[0] == 'd') {
+      steps = (chr[1] - '0')*100 + (chr[2] - '0')*10 + (chr[3] - '0');
       digitalWrite(PIN_DIR_1, LOW);
       digitalWrite(PIN_DIR_2, LOW);
       digitalWrite(PIN_DIR_3, LOW);
@@ -114,7 +81,8 @@ void loop() {
       }
       client.write('7');
     }
-    if (chr == 'l') {
+    if (chr[0] == 'l') {
+      steps = (chr[1] - '0')*100 + (chr[2] - '0')*10 + (chr[3] - '0');
       digitalWrite(PIN_DIR_1, HIGH);
       digitalWrite(PIN_DIR_2, HIGH);
       digitalWrite(PIN_DIR_3, LOW);
@@ -130,7 +98,8 @@ void loop() {
       }
       client.write('7');
     }
-    if (chr == 'r') {
+    if (chr[0] == 'r') {
+      steps = (chr[1] - '0')*100 + (chr[2] - '0')*10 + (chr[3] - '0');
       digitalWrite(PIN_DIR_1, LOW);
       digitalWrite(PIN_DIR_2, LOW);
       digitalWrite(PIN_DIR_3, HIGH);
@@ -146,7 +115,8 @@ void loop() {
       }
       client.write('7');
     }
-    if (chr == 'c') {
+    if (chr[0] == 'c') {
+      steps = (chr[1] - '0')*100 + (chr[2] - '0')*10 + (chr[3] - '0');
       digitalWrite(PIN_DIR_2, HIGH);
       digitalWrite(PIN_DIR_3, LOW);
       for (int j=0; j<steps; j++) {
@@ -159,7 +129,8 @@ void loop() {
       }
       client.write('7');
     }
-    if (chr == 'f') {
+    if (chr[0] == 'f') {
+      steps = (chr[1] - '0')*100 + (chr[2] - '0')*10 + (chr[3] - '0');
       digitalWrite(PIN_DIR_2, LOW);
       digitalWrite(PIN_DIR_3, HIGH);
       for (int j=0; j<steps; j++) {

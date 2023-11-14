@@ -9,7 +9,7 @@ import keyboard
 s = socket.socket()
 s.bind(('192.168.1.241', 2000))
 s.listen(4)
-os.system('start cmd /k python robot.py')
+#os.system('start cmd /k python robot.py')
 conn, addr = s.accept()
 
 stack = []
@@ -25,32 +25,32 @@ def run():
 
 def up():
     global stack
-    stack.append(str.encode('u' + str(value_up.get())))
+    stack.append(str.encode('u' + value_up.get()))
 
 
 def down():
     global stack
-    stack.append(str.encode('d' + str(value_down.get())))
+    stack.append(str.encode('d' + value_down.get()))
 
 
 def right():
     global stack
-    stack.append(str.encode('r' + str(value_right.get())))
+    stack.append(str.encode('r' + value_right.get()))
 
 
 def left():
     global stack
-    stack.append(str.encode('l' + str(value_left.get())))
+    stack.append(str.encode('l' + value_left.get()))
 
 
 def close():
     global stack
-    stack.append(str.encode('c' + str(value_close.get())))
+    stack.append(str.encode('c' + value_close.get()))
 
 
 def far():
     global stack
-    stack.append(str.encode('f' + str(value_far.get())))
+    stack.append(str.encode('f' + value_far.get()))
 
 
 def prog():
@@ -65,12 +65,12 @@ def clr():
 root = Tk()
 root.geometry('400x437')
 
-value_up = IntVar()
-value_down = IntVar()
-value_right = IntVar()
-value_left = IntVar()
-value_close = IntVar()
-value_far = IntVar()
+value_up = StringVar()
+value_down = StringVar()
+value_right = StringVar()
+value_left = StringVar()
+value_close = StringVar()
+value_far = StringVar()
 
 image_up_open = Image.open('up.png')
 image_up = ImageTk.PhotoImage(image_up_open)
