@@ -1,0 +1,182 @@
+// TCP клиент, передает данные из UART серверу, от сервера в UART
+#include <SPI.h>
+#include <UIPEthernet.h>
+
+#define PIN_STEP_1 3
+#define PIN_DIR_1 8
+#define PIN_STEP_2 5
+#define PIN_DIR_2 4
+#define PIN_STEP_3 7
+#define PIN_DIR_3 6
+
+#define SPEED 1
+
+// определяем конфигурацию сети
+byte mac[] = {0xAE, 0xB2, 0x26, 0xE4, 0x4A, 0x5C}; // MAC-адрес
+byte ip[] = {192, 168, 1, 1}; // IP-адрес клиента
+byte ipServ[] = {192, 168, 1, 241}; // IP-адрес сервера
+
+String mes;
+int j = 0;
+int steps = 100;
+
+EthernetClient client; // создаем клиента
+
+void setup() {
+  pinMode(PIN_STEP_1, OUTPUT);
+  pinMode(PIN_DIR_1, OUTPUT);
+  pinMode(PIN_STEP_2, OUTPUT);
+  pinMode(PIN_DIR_2, OUTPUT);
+  pinMode(PIN_STEP_3, OUTPUT);
+  pinMode(PIN_DIR_3, OUTPUT);
+  
+  Ethernet.begin(mac, ip);
+  delay(1000);
+
+  if (client.connect(ipServ, 2000)) {
+    mes = "connected";
+  }
+  else {
+    client.stop();
+    while (true); // останавливается
+  }
+}
+
+void loop() {
+  if (client.available()) {
+    char chr = client.read();
+
+    if (chr == '1') {
+      digitalWrite(PIN_DIR_1, HIGH);
+      digitalWrite(PIN_STEP_1, HIGH);
+      delay(SPEED);
+      digitalWrite(PIN_STEP_1, LOW);
+    }
+    if (chr == '2') {
+      digitalWrite(PIN_DIR_1, LOW);
+      digitalWrite(PIN_STEP_1, HIGH);
+      delay(SPEED);
+      digitalWrite(PIN_STEP_1, LOW);
+    }
+    if (chr == '3') {
+      digitalWrite(PIN_DIR_2, HIGH);
+      digitalWrite(PIN_STEP_2, HIGH);
+      delay(SPEED);
+      digitalWrite(PIN_STEP_2, LOW);
+    }
+    if (chr == '4') {
+      digitalWrite(PIN_DIR_2, LOW);
+      digitalWrite(PIN_STEP_2, HIGH);
+      delay(SPEED);
+      digitalWrite(PIN_STEP_2, LOW);
+    }
+    if (chr == '5') {
+      digitalWrite(PIN_DIR_3, HIGH);
+      digitalWrite(PIN_STEP_3, HIGH);
+      delay(SPEED);
+      digitalWrite(PIN_STEP_3, LOW);
+    }
+    if (chr == '6') {
+      digitalWrite(PIN_DIR_3, LOW);
+      digitalWrite(PIN_STEP_3, HIGH);
+      delay(SPEED);
+      digitalWrite(PIN_STEP_3, LOW);
+    }
+    if (chr == 'u') {
+      digitalWrite(PIN_DIR_1, HIGH);
+      digitalWrite(PIN_DIR_2, HIGH);
+      digitalWrite(PIN_DIR_3, HIGH);
+      for (int j=0; j<steps; j++) {
+        digitalWrite(PIN_STEP_1, HIGH);
+        digitalWrite(PIN_STEP_2, HIGH);
+        digitalWrite(PIN_STEP_3, HIGH);
+        delay(SPEED);
+        digitalWrite(PIN_STEP_1, LOW);
+        digitalWrite(PIN_STEP_2, LOW);
+        digitalWrite(PIN_STEP_3, LOW);
+        delay(SPEED);
+      }
+      client.write('7');
+    }
+    if (chr == 'd') {
+      digitalWrite(PIN_DIR_1, LOW);
+      digitalWrite(PIN_DIR_2, LOW);
+      digitalWrite(PIN_DIR_3, LOW);
+      for (int j=0; j<steps; j++) {
+        digitalWrite(PIN_STEP_1, HIGH);
+        digitalWrite(PIN_STEP_2, HIGH);
+        digitalWrite(PIN_STEP_3, HIGH);
+        delay(SPEED);
+        digitalWrite(PIN_STEP_1, LOW);
+        digitalWrite(PIN_STEP_2, LOW);
+        digitalWrite(PIN_STEP_3, LOW);
+        delay(SPEED);
+      }
+      client.write('7');
+    }
+    if (chr == 'l') {
+      digitalWrite(PIN_DIR_1, HIGH);
+      digitalWrite(PIN_DIR_2, HIGH);
+      digitalWrite(PIN_DIR_3, LOW);
+      for (int j=0; j<steps; j++) {
+        digitalWrite(PIN_STEP_1, HIGH);
+        digitalWrite(PIN_STEP_2, HIGH);
+        digitalWrite(PIN_STEP_3, HIGH);
+        delay(SPEED);
+        digitalWrite(PIN_STEP_1, LOW);
+        digitalWrite(PIN_STEP_2, LOW);
+        digitalWrite(PIN_STEP_3, LOW);
+        delay(SPEED);
+      }
+      client.write('7');
+    }
+    if (chr == 'r') {
+      digitalWrite(PIN_DIR_1, LOW);
+      digitalWrite(PIN_DIR_2, LOW);
+      digitalWrite(PIN_DIR_3, HIGH);
+      for (int j=0; j<steps; j++) {
+        digitalWrite(PIN_STEP_1, HIGH);
+        digitalWrite(PIN_STEP_2, HIGH);
+        digitalWrite(PIN_STEP_3, HIGH);
+        delay(SPEED);
+        digitalWrite(PIN_STEP_1, LOW);
+        digitalWrite(PIN_STEP_2, LOW);
+        digitalWrite(PIN_STEP_3, LOW);
+        delay(SPEED);
+      }
+      client.write('7');
+    }
+    if (chr == 'c') {
+      digitalWrite(PIN_DIR_2, HIGH);
+      digitalWrite(PIN_DIR_3, LOW);
+      for (int j=0; j<steps; j++) {
+        digitalWrite(PIN_STEP_2, HIGH);
+        digitalWrite(PIN_STEP_3, HIGH);
+        delay(SPEED);
+        digitalWrite(PIN_STEP_2, LOW);
+        digitalWrite(PIN_STEP_3, LOW);
+        delay(SPEED);
+      }
+      client.write('7');
+    }
+    if (chr == 'f') {
+      digitalWrite(PIN_DIR_2, LOW);
+      digitalWrite(PIN_DIR_3, HIGH);
+      for (int j=0; j<steps; j++) {
+        digitalWrite(PIN_STEP_2, HIGH);
+        digitalWrite(PIN_STEP_3, HIGH);
+        delay(SPEED);
+        digitalWrite(PIN_STEP_2, LOW);
+        digitalWrite(PIN_STEP_3, LOW);
+        delay(SPEED);
+      }
+      client.write('7');
+    }    
+  }
+
+  // если сервер отключился, останавливаем клиент
+  if (!client.connected()) {
+    client.stop();
+    while (true); // останавливается
+  }
+}

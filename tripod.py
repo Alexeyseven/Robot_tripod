@@ -8,11 +8,11 @@ import keyboard
 
 s = socket.socket()
 s.bind(('192.168.1.241', 2000))
-s.listen(1)
-#os.system('start cmd /k python robot.py')
+s.listen(4)
+os.system('start cmd /k python robot.py')
 conn, addr = s.accept()
 
-mes =[b'1', b'3', b'5']
+mes =[b'q', b'e', b'y']
 
 
 def send(mes):
@@ -27,53 +27,51 @@ def send(mes):
 
 def down():
     global mes
-    mes = [b'1', b'3', b'5']
+    mes = [b'w', b't', b'i']
 
 
 def up():
     global mes
-    mes = [b'2', b'4', b'6']
+    mes = [b'q', b'e', b'y']
 
 
 def left():
     global mes
-    mes = [b'1', b'4', b'6']
+    mes = [b'q', b't', b'i']
 
 
 def right():
     global mes
-    mes = [b'2', b'3', b'5']
+    mes = [b'w', b'e', b'y']
 
 
 def close():
     global mes
-    mes = [b'', b'3', b'6']
+    mes = [b'', b'e', b'i']
 
 
 def far():
     global mes
-    mes = [b'', b'4', b'5']
+    mes = [b'', b't', b'y']
 
 
-def sequence(dir, lim):
-    i = 0
-    dir()
-    while i < lim:
-        send(mes)
-        if keyboard.is_pressed('q'):
-            break
-        i += 1
-
-
-def prog_1():
-    while not keyboard.is_pressed('q'):
-        sequence(up, 1000)
-        sequence(left, 1000)
-        sequence(down, 1000)
-        sequence(up, 1000)
-        sequence(right, 1000)
-        sequence(down, 1000)
-
+def run():
+    conn.send(b'r2')
+    print(conn.recv(50))
+    conn.send(b'f2')
+    print(conn.recv(50))
+    conn.send(b'd2')
+    print(conn.recv(50))
+    conn.send(b'u2')
+    print(conn.recv(50))
+    conn.send(b'l2')
+    print(conn.recv(50))
+    conn.send(b'c2')
+    print(conn.recv(50))
+    conn.send(b'd2')
+    print(conn.recv(50))
+    conn.send(b'u2')
+    print(conn.recv(50))
 
 root = Tk()
 root.geometry('400x250')
@@ -102,7 +100,7 @@ Button(image=image_left, command=left).place(x=15, y=85)
 Button(image=image_right, command=right).place(x=200, y=85)
 Button(image=image_close, command=close).place(x=15, y=162)
 Button(image=image_far, command=far).place(x=200, y=10)
-Button(text='prog_1', command=prog_1).place(x=320, y=10)
+Button(text='RUN', command=run).place(x=320, y=10)
 #Entry(textvariable=value, width=7).place(x=127, y=100)
 entry_velocity = Entry(textvariable=velocity, width=7)
 entry_velocity.insert(0, 50)
